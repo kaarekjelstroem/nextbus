@@ -1,19 +1,29 @@
 {
-  "name": "YOUR-PROJECT-NAME-HERE",
-  "description": "YOUR PROJECT DESCRIPTION HERE",
-  "author": "YOUR NAME <your@emailaddress.com>",
-  "version": "0.0.1",
+  "description": "A sample application that uses the NextBus API to show bus routes and time tables",
+  "author": "Kaare Kjelstroem <kaarek@gmail.com>",
+  "version": "0.0.1-8",
   "dependencies": {
     "connect": "1.8.5",
     "express": "2.5.2",
     "jade": "0.20.0",
-    "mongoose": "2.4.8",
-    "socket.io": "0.8.7"
+    "socket.io": "0.8.7",
+    "xml2js": "0.4.1",
+    "nedb": "0.10.1",
+    "libxmljs": "0.8.1",
+    "hashmap": "1.0.0"
   },
   "devDependencies": {
     "vows": "0.5.x",
-	"mocha": "*",
-	"should": "*"
+    "mocha": "*",
+    "should": "*"
   },
-  "engine": "node >= 0.6.6"
+  "engine": "node >= 0.6.6",
+  "name": "NextBus",
+  "subdomain": "kaarekjelstroem-nextbus",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": "0.10.x"
+  }
 }

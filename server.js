@@ -11,7 +11,7 @@ var server = express.createServer();
 server.configure(function(){
     server.set('views', __dirname + '/views');
     server.set('view options', { layout: false });
-    server.use(connect.bodyParser());
+    //server.use(connect.bodyParser());
     server.use(express.cookieParser());
     server.use(express.session({ secret: "shhhhhhhhh!"}));
     server.use(express.static(__dirname + '/web'));
@@ -44,6 +44,7 @@ server.get('/agency/:agencyid/route/:routeid/nextbus', nextbusapi.nextAgencyRout
 server.get('/routesnearlat/:lat/lon/:lon/precision/:precision', nextbusapi.routesNearCoordinate);
 server.get('/agenciesnearlat/:lat/lon/:lon', nextbusapi.agenciesNearCoordinate);
 server.get('/regions', nextbusapi.regions);
+server.get('/agency/:agencyid/route/:routeid/prediction', nextbusapi.nextAgencyRoutePrediction);
 
 // Index route
 server.get('/', function(req, res) {

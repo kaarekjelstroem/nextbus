@@ -19,7 +19,7 @@ var HashMap = require('hashmap').HashMap;
 var Datastore = require('nedb')
   , db = new Datastore();
 
-var geohash = require("geohash").GeoHash;
+var geohash = require("./geohash").GeoHash;
 
 var querystring = require('querystring');
 var http = require('http');
@@ -27,8 +27,6 @@ var libxmljs = require('libxmljs');
 
 var HOST = 'webservices.nextbus.com';
 var BASEPATH = '/service/publicXMLFeed';
-
-var async = require('async');
 
 /**
  * Internal helper operation for executing an HTTP GET
@@ -39,14 +37,16 @@ var async = require('async');
  */
 function doGet(host, endpoint, success) {
 
-    console.log('Perform get:' + host + endpoint);// + ' agency:' + agency + ' route:' + route + ' lat:' + lat + ' lon:' + lon + ' success:' + success);
+    console.log('doGet:' + host + endpoint);// + ' agency:' + agency + ' route:' + route + ' lat:' + lat + ' lon:' + lon + ' success:' + success);
 
     var options = {
         host: host,
         port: 80,
         path: endpoint,
         method: 'GET',
-        headers: {}
+        headers: {
+            connection: 'keep-alive'
+        }
     };
 
     var req = http.request(options, function(res) {
@@ -64,16 +64,29 @@ function doGet(host, endpoint, success) {
 
         res.on('end', function() {
 
-            var dom = libxmljs.parseXml(xml);
+            try {
+                var dom = libxmljs.parseXml(xml);
 
-            //console.log('doGet: ' + dom);
-            success(dom);
-
+                //console.log('doGet: ' + dom);
+                success(dom);
+            } catch (err) {
+                console.log('doGet:XML parse error (' + err + ') for ' + host + endpoint);
+            }
 
         });
     });
-
     req.end();
+
+    req.on('socket', function (socket) {
+        socket.setTimeout(1000 * 60 * 2); // Two minute timeout
+        socket.on('timeout', function() {
+            req.abort();
+        });
+    });
+
+    req.on('error', function(err) {
+        console.log('doGet:HTTP error (' + err + ') for ' + host + endpoint);
+    });
 }
 
 function initialize() {
@@ -107,9 +120,9 @@ function addAgenciesToDB() {
  * @param agencyRegionTitle
  */
 function addRouteConfigToDB(agencyTag, agencyTitle, agencyRegionTitle) {
-    var endpoint3 = BASEPATH + '?' + querystring.stringify({command: 'routeConfig', a: agencyTag})
+    var endpoint3 = BASEPATH + '?' + querystring.stringify({command: 'routeConfig', a: agencyTag, terse: ''})
 
-    console.log('endpoint3:' + endpoint3);
+    //console.log('endpoint3:' + endpoint3);
 
     doGet(HOST, endpoint3, function(dom3) {
 
@@ -140,6 +153,20 @@ function addRouteConfigToDB(agencyTag, agencyTitle, agencyRegionTitle) {
 
             console.log('route: ' + agencyTag + '=' + agencyTitle + ' route:' + routeTitle + 'lat:' + latMin + ' lon:' + lonMin + ' geohash:' + geoHash);
 
+            // TODO: Not working. The list of stop elements is populated, but the stop elements are alle empty?!
+            /*
+            console.log(routeNodeList[i].find('stop')[0].title);
+
+            var stopNodeList = dom3.find('//route/stop');
+
+            for(var j = 0; j < stopNodeList.length; j++) {
+                //console.log("Stop.tag" + stopNodeList[j].tag);
+                //console.log("Stop:" + JSON.stringify(stopNodeList[j]));
+            }
+
+            //db.insert({route: {agencyTitle: agencyTitle, agencytag: agencyTag, region: agencyRegionTitle, routetag: routeTag, title: routeTitle, latmin: latMin, latmax: latMax, lonmin: lonMin, lonmax: lonMax, geohash: geoHash, stops: stopNodeList}});
+            */
+
             db.insert({route: {agencyTitle: agencyTitle, agencytag: agencyTag, region: agencyRegionTitle, routetag: routeTag, title: routeTitle, latmin: latMin, latmax: latMax, lonmin: lonMin, lonmax: lonMax, geohash: geoHash}});
         }
 
@@ -163,7 +190,7 @@ function routesNearCoordinate(request, response) {
     var geoHash = geohash.encodeGeoHash(lat, lon);
     var geoHashTruncate = geoHash.substring(0, precision);
 
-    console.log("Looking for geohash:" + geoHash + ' short:' + geoHashTruncate);
+    console.log("routesNearCoordinate:Looking for geohash:" + geoHash + ' short:' + geoHashTruncate);
 
     var top = geohash.calculateAdjacent(geoHash, 'top');
     var bottom = geohash.calculateAdjacent(geoHash, 'bottom');
@@ -174,20 +201,44 @@ function routesNearCoordinate(request, response) {
    	var bottomright = geohash.calculateAdjacent(right, 'bottom');
    	var bottomleft = geohash.calculateAdjacent(left, 'bottom');
 
-    var geoHashList = [
-        {"route.geohash": new RegExp(geoHashTruncate)},
-        {"route.geohash": new RegExp(top)},
-        {"route.geohash": new RegExp(bottom)},
-        {"route.geohash": new RegExp(right)},
-        {"route.geohash": new RegExp(left)},
-        {"route.geohash": new RegExp(topleft)},
-        {"route.geohash": new RegExp(topright)},
-        {"route.geohash": new RegExp(bottomright)},
-        {"route.geohash": new RegExp(bottomleft)}];
+    console.log('routesNearCoordinate:top=' + top + ',' + bottom + ',' + left+ ',' + right+ ',' + topleft + ',' + topright + ',' + bottomleft+ ',' + bottomright+ ',')
 
-    console.log("geoHashList:" + JSON.stringify(geoHashList));
+    top = top.substring(0, precision);
+    bottom = bottom.substring(0, precision);
+    right = right.substring(0, precision);
+    left = left.substring(0, precision);
+    topleft = topleft.substring(0, precision);
+    topright = topright.substring(0, precision);
+    bottomleft = bottomleft.substring(0, precision);
+    bottomright = bottomright.substring(0, precision);
+
+    // Find all routes whose geohashes begin with one of the 9 prefixes (are close by)
+    var geoHashList = [
+        {"route.geohash": new RegExp('^' + geoHashTruncate + '(.*)$')},
+        {"route.geohash": new RegExp('^' + top + '(.*)$')},
+        {"route.geohash": new RegExp('^' + bottom + '(.*)$')},
+        {"route.geohash": new RegExp('^' + right + '(.*)$')},
+        {"route.geohash": new RegExp('^' + left + '(.*)$')},
+        {"route.geohash": new RegExp('^' + topleft + '(.*)$')},
+        {"route.geohash": new RegExp('^' + topright + '(.*)$')},
+        {"route.geohash": new RegExp('^' + bottomright + '(.*)$')},
+        {"route.geohash": new RegExp('^' + bottomleft + '(.*)$')}];
+
+    console.log("routesNearCoordinate:Hash:" + geoHashTruncate + ',' + top + ',' + bottom + ',' + right + ',' + left + ',' + topleft + ',' + topright + ',' + bottomleft + ',' + bottomright);
 
     db.find({$or: geoHashList}, function (err, docs) {
+
+        console.log('routesNearCoordinate:' + JSON.stringify(docs));
+
+        docs.sort(function(routeA, routeB) {
+
+            if(routeA.route.title < routeB.route.title )
+                return -1;
+            else if (routeA.route.title > routeB.route.title)
+                return 1;
+            else
+                return 0;
+        });
 
         response.send(JSON.stringify(docs))
 
@@ -236,6 +287,15 @@ function agenciesNearCoordinate(request, response) {
 
     db.find({$or: geoHashList}, function (err, docs) {
 
+        docs.sort(function(agencyA, agencyB) {
+            if(agencyA.title < agencyB.title )
+                return -1;
+            else if (agencyA.title > agencyB.title)
+                return 1;
+            else
+                return 0;
+        });
+
         response.send(JSON.stringify(docs))
 
     });
@@ -275,6 +335,15 @@ function regions(request, response) {
                 console.log('key:' + key + ' = ' + JSON.stringify(agency));
             }
         }
+
+        result.sort(function(regionA, regionB) {
+            if(regionA.region < regionB.region )
+                return -1;
+            else if (regionA.region > regionB.region)
+                return 1;
+            else
+                return 0;
+        });
 
         response.send(JSON.stringify(result))
 
@@ -349,7 +418,7 @@ function agencyRouteSchedule(request, response) {
             for (var i = 0; i < routeHeaderStopNodeList .length; ++i) {
 
                 var tag = routeHeaderStopNodeList[i].attr('tag').value();
-                var title = routeHeaderStopNodeList[i].text()
+                var title = routeHeaderStopNodeList[i].text();
 
                 console.log(tag + '=' + title);
 
@@ -367,7 +436,7 @@ function agencyRouteSchedule(request, response) {
                     var tag = stopsNodeList[s].attr('tag').value();
                     var title = stopsNodeList[s].text()
 
-                    console.log(tag + '=' + title);
+                    console.log("agencyRouteSchedule:" + tag + '=' + title);
 
                     result.route.schedule.push({"stop" : {"tag:" : tag, "title" : title}});
 
@@ -377,6 +446,33 @@ function agencyRouteSchedule(request, response) {
 
         response.send(JSON.stringify(result));
     });
+}
+
+function nextAgencyRoutePrediction(request, response) {
+
+    db.find({'route.routetag': request.params.routeid}, function (err, docs) {
+
+        if(docs.length > 0) {
+            var stops = docs[0].route.stops;
+            var routeTag = docs[0].route.routetag;
+            var tagList = '';
+
+            for(var i = 0; i < stops.length; i++) {
+                console.log(JSON.stringify(stops[i]));
+                var tag = routeTag +'|' + stops[i].tag;
+                if(i < stops.length)
+                    tag = tag + ',';
+                tagList = tagList + tag;
+            }
+
+            var endpoint = BASEPATH + '?' + querystring.stringify({command: 'predictions', a: request.params.agencyid, r: request.params.routeid, stops: tagList});
+
+            console.log(endpoint);
+        }
+
+    });
+
+
 }
 
 function nextAgencyRouteSchedule(request, response) {
@@ -395,7 +491,6 @@ function nextAgencyRouteSchedule(request, response) {
                     "scheduleClass" : routeNode.attr('scheduleClass').value(),
                     "serviceClass" : routeNode.attr('serviceClass').value(),
                     "direction" : routeNode.attr('direction').value(),
-                    "header" : [],
                     "schedule" : []
                 }
             }
@@ -413,30 +508,32 @@ function nextAgencyRouteSchedule(request, response) {
 
             // Run thru the indiviual timed routes
             var tagMap = new HashMap();
-            var timedRouteNodeList = dom.find('//tr');
+            var stopsNodeList = dom.find('//tr/stop');
             var now = new Date();
 
-            for (var tr = 0; tr < timedRouteNodeList.length; ++tr) {
+            console.log('StopsNodeList:' + JSON.stringify(stopsNodeList));
 
-                var stopsNodeList = timedRouteNodeList[tr].find('stop');
+            for(var s = 0; s < stopsNodeList.length; ++s) {
 
-                for(var s = 0; s < stopsNodeList.length; ++s) {
+                var tag = stopsNodeList[s].attr('tag').value();
+                var title = titleMap.get(tag);
+                var time = stopsNodeList[s].text().split(':');
+                var epochTime = stopsNodeList[s].attr('epochTime').value();
+                console.log('epochTime:' + epochTime);
 
-                    console.log("Found:" + tag + '=' + time + ' now:' + now + ' ' + (now < time));
+                // The stop is not served if epochTime == -1
+                if(epochTime != '-1') {
 
-                    var tag = stopsNodeList[s].attr('tag').value();
-                    var title = titleMap.get(tag);
-                    var time = stopsNodeList[s].text().split(':');
                     var date = new Date();
                     date.setHours(time[0]);
                     date.setMinutes(time[1]);
                     date.setSeconds(time[2]);
 
-                    console.log("Compare dates:" + date + ',' + now);
+                    console.log("Compare dates:" + date + ':' + now + ' == ' + (now < date));
 
-                    if(now.getTime() < date.getTime() && !tagMap.has(tag)) {
+                    if((now < date) && !tagMap.has(tag)) {
 
-                        console.log('add: ' + tag + '=' + title + ', time:' + time);
+                        //console.log('add: ' + tag + '=' + title + ', time:' + time);
 
                         tagMap.set(tag, tag);
 
@@ -445,6 +542,17 @@ function nextAgencyRouteSchedule(request, response) {
                 }
             }
         }
+
+        result.route.schedule.sort(function(stopA, stopB) {
+
+            console.log('docs.sort.compare(' + stopA.stop.time+ ' <> ' + stopB.stop.time + ')');
+            if(stopA.stop.time < stopB.stop.time )
+                return -1;
+            else if (stopA.stop.time > stopB.stop.time)
+                return 1;
+            else
+                return 0;
+        });
 
         response.send(JSON.stringify(result));
     });
@@ -461,3 +569,4 @@ exports.nextAgencyRouteSchedule = nextAgencyRouteSchedule;
 exports.routesNearCoordinate = routesNearCoordinate;
 exports.agenciesNearCoordinate = agenciesNearCoordinate;
 exports.regions = regions;
+exports.nextAgencyRoutePrediction = nextAgencyRoutePrediction;
