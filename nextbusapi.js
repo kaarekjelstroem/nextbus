@@ -1,18 +1,6 @@
 /**
  * REST API that connects to the public Next Bus API (XML) and returns JSON structures
  *
- * Services:
- *
- * Get list of all agencies: /agencies
- * Get list of all routes for a specific agency: /agency/<agencyid>/routes
- * Get a schedule for a concrete route of a specific agency: /agency/<agencyid>/route/<routeid>/schedule
- *
- * Samples:
- *
- * Get list of all agencies: http://localhost:8081/agencies
- * Get list of all routes for a specific agency: http://localhost:8081/agency/actransit/routes
- * Get a schedule for a concrete route of a specific agency: http://localhost:8081/agency/actransit/route/275/schedule
- *
  * Created by kaarek on 28/01/14.
  */
 var HashMap = require('hashmap').HashMap;
@@ -71,6 +59,7 @@ function doGet(host, endpoint, success) {
                 success(dom);
             } catch (err) {
                 console.log('doGet:XML parse error (' + err + ') for ' + host + endpoint);
+                console.log('doGet:while parsing:'+ xml);
             }
 
         });

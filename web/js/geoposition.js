@@ -10,12 +10,18 @@ app.initLocation = function(done) {
     // Default location
     app.latitude = 37.7860099;
     app.longitude = -122.4025387;
+    app.orig_latitude = app.latitude;
+    app.orig_longitude = app.longitude;
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
             function(position) {
                 app.latitude = position.coords.latitude;
                 app.longitude = position.coords.longitude;
+
+                app.orig_latitude = app.latitude;
+                app.orig_longitude = app.longitude;
+
                 done();
             },
             function(error) {

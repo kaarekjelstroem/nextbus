@@ -73,7 +73,7 @@
         <hr/>
         <div id="wrapper">
             <div id="over_map">
-                <h5 class="tmpl-address">DUMMY ADDRESS</h5>
+                <div class="tmpl-address"></div>
                 <div class="tmpl-district-select"></div>
                 <br/>
                 <div class="tmpl-routes-select"></div>
@@ -87,7 +87,7 @@
 
     <script type="text/template" id="address-template">
         <div class="view">
-            <h5><%= address %></address>
+            <h5><button class="homebutton">Home</button> <%= address %></address>
         </div>
     </script>
 
@@ -129,20 +129,32 @@
 
     <script type="text/template" id="schedule-template">
         <h5>Schedule</h5>
+        <br/>
+                <div style="height:300px;overflow: auto;">
         <table class="table table-striped table-bordered table-condensed">
             <%
-            if(typeof schedules != 'undefined') {
-            _.each(schedules.route.schedule, function(schedule) {
-            %>
-            <tr>
-                <td><%= schedule.stop.title %></td>
-                <td><%= schedule.stop.time %></td>
-            </tr>
-            <%
-            });
+            if((typeof schedules != 'undefined') && (typeof schedules.route != 'undefined')) {
+                _.each(schedules.route.schedule, function(schedule) {
+
+                %>
+                <tr>
+                    <td><%= schedule.stop.title %></td>
+                    <td><%= schedule.stop.time[0]%>:<%= schedule.stop.time[1]%>:<%= schedule.stop.time[2]%></td>
+                </tr>
+                <%
+                });
+
+                if(schedules.route.schedule.length == 0) {
+                %>
+                    No more service today.
+                <%
+                }
             }
+
+
             %>
         </table>
+        </div>
     </script>
 
     <script>
@@ -167,16 +179,24 @@
         app.AddressView = Backbone.View.extend({
             el: '.tmpl-address',
 
-           initialize: function () {
-             this.listenTo(this.model,'change', this.render);
-             this.model.fetch();
-           },
-           render: function () {
-               var address = this.model.attributes.results[0].formatted_address;
-               console.log(address);
-               var template = _.template($('#address-template').html(), {address: address});
-               this.$el.html(template);
-           }
+            events: {
+                "click .homebutton": "clickhome",
+            },
+            clickhome: function() {
+                console.log("clickhome");
+                initGoogleMaps(app.orig_latitude, app.orig_longitude);
+            },
+            initialize: function () {
+                this.listenTo(this.model,'change', this.render);
+                this.model.fetch();
+            },
+
+            render: function () {
+                var address = this.model.attributes.results[0].formatted_address;
+                console.log(address);
+                var template = _.template($('#address-template').html(), {address: address});
+                this.$el.html(template);
+            }
         });
 
         // Model for getting the the list of districts
@@ -279,6 +299,7 @@
             },
             refresh: function () {
                 this.model.updateUrl(app.latitude, app.longitude);
+                this.model.clear();
                 this.model.fetch();
             }
         });
@@ -310,6 +331,7 @@
             },
             refresh: function () {
                 this.model.updateUrl(app.agency, app.route);
+                this.model.clear();
                 this.model.fetch();
             }
         });
