@@ -385,52 +385,58 @@ function agencyRouteSchedule(request, response) {
     var endpoint = BASEPATH + '?' + querystring.stringify({command: 'schedule', a: request.params.agencyid, r: request.params.routeid});;
     doGet(HOST, endpoint, function(dom) {
 
-        console.log(dom);
+        var result;
+        if(typeof dom != 'undefined') {
 
-        var routeNode = dom.find('//route')[0];
+            console.log(dom);
 
-        if(routeNode) {
-            var result = {
-                route : {
-                    "tag" : routeNode.attr('tag').value(),
-                    "title" : routeNode.attr('title').value(),
-                    "scheduleClass" : routeNode.attr('scheduleClass').value(),
-                    "serviceClass" : routeNode.attr('serviceClass').value(),
-                    "direction" : routeNode.attr('direction').value(),
-                    "header" : [],
-                    "schedule" : []
+            var routeNode = dom.find('//route')[0];
+
+            if(typeof routeNode != 'undefined') {
+                result = {
+                    route : {
+                        "tag" : routeNode.attr('tag').value(),
+                        "title" : routeNode.attr('title').value(),
+                        "scheduleClass" : routeNode.attr('scheduleClass').value(),
+                        "serviceClass" : routeNode.attr('serviceClass').value(),
+                        "direction" : routeNode.attr('direction').value(),
+                        "header" : [],
+                        "schedule" : []
+                    }
+                }
+
+                // Run thru the header stops and add those to the header element
+                var routeHeaderStopNodeList = routeNode.find('header/stop');
+                for (var i = 0; i < routeHeaderStopNodeList .length; ++i) {
+
+                    var tag = routeHeaderStopNodeList[i].attr('tag').value();
+                    var title = routeHeaderStopNodeList[i].text();
+
+                    console.log(tag + '=' + title);
+
+                    result.route.header.push({"stop" : {"tag" : tag, "title" : title}});
+                }
+
+                // Run thru the indiviual timed routes
+                var timedRouteNodeList = dom.find('//tr');
+                for (var tr = 0; tr < timedRouteNodeList.length; ++tr) {
+
+                    var stopsNodeList = timedRouteNodeList[tr].find('stop');
+
+                    for(var s = 0; s < stopsNodeList.length; ++s) {
+
+                        var tag = stopsNodeList[s].attr('tag').value();
+                        var title = stopsNodeList[s].text()
+
+                        console.log("agencyRouteSchedule:" + tag + '=' + title);
+
+                        result.route.schedule.push({"stop" : {"tag:" : tag, "title" : title}});
+
+                    }
                 }
             }
-
-            // Run thru the header stops and add those to the header element
-            var routeHeaderStopNodeList = routeNode.find('header/stop');
-            for (var i = 0; i < routeHeaderStopNodeList .length; ++i) {
-
-                var tag = routeHeaderStopNodeList[i].attr('tag').value();
-                var title = routeHeaderStopNodeList[i].text();
-
-                console.log(tag + '=' + title);
-
-                result.route.header.push({"stop" : {"tag" : tag, "title" : title}});
-            }
-
-            // Run thru the indiviual timed routes
-            var timedRouteNodeList = dom.find('//tr');
-            for (var tr = 0; tr < timedRouteNodeList.length; ++tr) {
-
-                var stopsNodeList = timedRouteNodeList[tr].find('stop');
-
-                for(var s = 0; s < stopsNodeList.length; ++s) {
-
-                    var tag = stopsNodeList[s].attr('tag').value();
-                    var title = stopsNodeList[s].text()
-
-                    console.log("agencyRouteSchedule:" + tag + '=' + title);
-
-                    result.route.schedule.push({"stop" : {"tag:" : tag, "title" : title}});
-
-                }
-            }
+        } else {
+            result = [];
         }
 
         response.send(JSON.stringify(result));
