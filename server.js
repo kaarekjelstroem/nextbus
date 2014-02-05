@@ -46,6 +46,8 @@ server.get('/agenciesnearlat/:lat/lon/:lon', nextbusapi.agenciesNearCoordinate);
 server.get('/regions', nextbusapi.regions);
 server.get('/agency/:agencyid/route/:routeid/prediction', nextbusapi.nextAgencyRoutePrediction);
 
+server.get('/agency/:agency/route/:route/stop/:stop/predictions', nextbusapi.predictions);
+
 // Index route
 server.get('/', function(req, res) {
 	res.render(__dirname+webdir+'/index.html')

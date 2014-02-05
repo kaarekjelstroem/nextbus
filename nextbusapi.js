@@ -16,16 +16,72 @@ var libxmljs = require('libxmljs');
 var HOST = 'webservices.nextbus.com';
 var BASEPATH = '/service/publicXMLFeed';
 
+function doGetSax(host, endpoint, funcs) {
+
+    console.log('doGet(dom):' + host + endpoint);// + ' agency:' + agency + ' route:' + route + ' lat:' + lat + ' lon:' + lon + ' success:' + success);
+
+    var options = {
+        host: host,
+        port: 80,
+        path: endpoint,
+        method: 'GET',
+        headers: {
+            connection: 'keep-alive'
+        }
+    };
+
+    var p = new libxmljs.SaxParser(funcs);
+
+    var req = http.request(options, function(res) {
+
+        res.setEncoding('utf-8');
+
+        var xml = '';
+
+        res.on('data', function(data) {
+            xml += data;
+        });
+
+        res.on('end', function() {
+
+            try {
+                //console.log('doGet: ' + dom);
+               p.parseString(xml);
+            } catch (err) {
+                console.log('doGet:XML parse error (' + err + ') for ' + host + endpoint);
+                console.log('doGet:while parsing:'+ xml);
+            }
+
+        });
+
+    });
+    req.end();
+
+    req.on('socket', function (socket) {
+        socket.setTimeout(1000 * 60 * 2); // Two minute timeout
+        socket.setMaxListeners(500);
+        socket.on('timeout', function() {
+            req.abort();
+        });
+    });
+
+    req.on('error', function(err) {
+        console.log('doGet:HTTP error (' + err + ') for ' + host + endpoint);
+    });
+
+}
+
 /**
  * Internal helper operation for executing an HTTP GET
  *
  * @param host
  * @param endpoint
  * @param success
+ * @param parser
  */
 function doGet(host, endpoint, success) {
 
-    console.log('doGet:' + host + endpoint);// + ' agency:' + agency + ' route:' + route + ' lat:' + lat + ' lon:' + lon + ' success:' + success);
+    console.log('doGet(dom):' + host + endpoint);// + ' agency:' + agency + ' route:' + route + ' lat:' + lat + ' lon:' + lon + ' success:' + success);
 
     var options = {
         host: host,
@@ -102,64 +158,86 @@ function addAgenciesToDB() {
     });
 }
 
-/**
- * Internal helper: store route and agency data to database
- * @param agencyTag
- * @param agencyTitle
- * @param agencyRegionTitle
- */
 function addRouteConfigToDB(agencyTag, agencyTitle, agencyRegionTitle) {
-    var endpoint3 = BASEPATH + '?' + querystring.stringify({command: 'routeConfig', a: agencyTag, terse: ''})
 
-    //console.log('endpoint3:' + endpoint3);
+    var endpoint = BASEPATH + '?' + querystring.stringify({command: 'routeConfig', a: agencyTag, terse: ''})
 
-    doGet(HOST, endpoint3, function(dom3) {
+    var map = new HashMap();
+    var lat, lon, geoHash;
 
-        var routeNodeList = dom3.find('//route');
-        if(routeNodeList.length > 0) {
+    doGetSax(HOST, endpoint, {
+        startDocument: function() {
+            console.log('starting...');
+        },
+        endDocument: function() {
+            console.log('done.');
+        },
+        startElementNS: function(elem, attrs, prefix, uri, namespaces) {
+//            console.log('onStartElementNS:' + elem);
+            if(elem == 'route') {
+                inRoute = true;
+                var geoHash =  geohash.encodeGeoHash(attrs[4][3], attrs[6][3]);
+                route = {route: {
+                    agencyTitle: agencyTitle,
+                    agencytag: agencyTag,
+                    region: agencyRegionTitle,
+                    routetag: attrs[0][3],
+                    title: attrs[1][3],
+                    color: attrs[2][3],
+                    oppositeColor: attrs[3][3],
+                    latmin: attrs[4][3],
+                    latmax: attrs[5][3],
+                    lonmin: attrs[6][3],
+                    lonmax: attrs[7][3],
+                    geohash: geoHash,
+                    stops: []}
+                };
+                lat = route.route.latmin; // These are used for the agency
+                lon = route.route.lonmin;
+                geoHash = geohash.encodeGeoHash(lat, lon)
 
-            var latMin = routeNodeList[0].attr('latMin').value();
-            var lonMin = routeNodeList[0].attr('lonMin').value();
-            var geoHash =  geohash.encodeGeoHash(latMin, lonMin);
-
-            console.log('agency: ' + agencyTitle + ' tag:' + agencyTag + ' geohash:' + geoHash);
-
-            db.insert({agency: {tag: agencyTag, title: agencyTitle, region: agencyRegionTitle, lat: latMin, lon: lonMin, geohash: geoHash}});
-
-        } else {
-            console.log("Error(routeConfig): No routedetails for agencytag:" + agencyTag + ", agency:" + agencyTitle);
-        }
-
-        for (var i = 0; i < routeNodeList.length; ++i) {
-
-            var latMin = routeNodeList[i].attr('latMin').value();
-            var lonMin = routeNodeList[i].attr('lonMin').value();
-            var latMax = routeNodeList[i].attr('latMax').value();
-            var lonMax = routeNodeList[i].attr('lonMax').value();
-            var routeTag = routeNodeList[i].attr('tag').value();
-            var routeTitle = routeNodeList[i].attr('title').value();
-            var geoHash =  geohash.encodeGeoHash(latMin, lonMin);
-
-            console.log('route: ' + agencyTag + '=' + agencyTitle + ' route:' + routeTitle + 'lat:' + latMin + ' lon:' + lonMin + ' geohash:' + geoHash);
-
-            // TODO: Not working. The list of stop elements is populated, but the stop elements are alle empty?!
-            /*
-            console.log(routeNodeList[i].find('stop')[0].title);
-
-            var stopNodeList = dom3.find('//route/stop');
-
-            for(var j = 0; j < stopNodeList.length; j++) {
-                //console.log("Stop.tag" + stopNodeList[j].tag);
-                //console.log("Stop:" + JSON.stringify(stopNodeList[j]));
+            } else if (elem == 'stop') {
+                //console.log(JSON.stringify(attrs));
+                if(attrs.length == 5) {
+                    var geoHash = geohash.encodeGeoHash(attrs[2][3], attrs[3][3])
+                    var stop = {stop: {tag: attrs[0][3], title:attrs[1][3], lat:attrs[2][3], lon:attrs[3][3], stopId:attrs[4][3], geohash:geoHash}};
+                    //console.log(JSON.stringify(stop));
+                    route.route.stops.push(stop);
+                }
             }
-
-            //db.insert({route: {agencyTitle: agencyTitle, agencytag: agencyTag, region: agencyRegionTitle, routetag: routeTag, title: routeTitle, latmin: latMin, latmax: latMax, lonmin: lonMin, lonmax: lonMax, geohash: geoHash, stops: stopNodeList}});
-            */
-
-            db.insert({route: {agencyTitle: agencyTitle, agencytag: agencyTag, region: agencyRegionTitle, routetag: routeTag, title: routeTitle, latmin: latMin, latmax: latMax, lonmin: lonMin, lonmax: lonMax, geohash: geoHash}});
+        },
+        endElementNS: function(elem, prefix, uri) {
+            //console.log('onEndElementNS:' + elem);
+            if(elem == 'route') {
+                db.insert(route);
+                console.log("Add route:" + JSON.stringify(route));
+                inRoute = false;
+            } else if (elem = 'body') {
+                if(!map.has(agencyTag) && (typeof route != 'undefined')) {
+                    var agency = {agency: {tag: agencyTag, title: agencyTitle, region: agencyRegionTitle, lat: lat, lon: lon, geohash: route.route.geoHash}}
+                    console.log("Add agency:" + JSON.stringify(agency));
+                    db.insert(agency);
+                    map.set(agencyTag, agencyTag);
+                }
+            }
+        },
+        characters: function(chars) {
+            //console.log('onCharacters:' + chars);
+        },
+        cdata: function(chars) {
+            //console.log('onCdata:' + chars);
+        },
+        comment: function(chars) {
+            //console.log('onComment:' + chars);
+        },
+        warning: function(warning) {
+            console.warn(warning);
+        },
+        error: function(error) {
+            console.error('ERROR: ' + error);
         }
-
     });
+
 }
 
 /**
@@ -321,7 +399,7 @@ function regions(request, response) {
                         lon: agency.lon,
                         geohash: agency.geohash
                     })
-                console.log('key:' + key + ' = ' + JSON.stringify(agency));
+                console.log('regions:key:' + key + ' = ' + JSON.stringify(agency));
             }
         }
 
@@ -371,6 +449,60 @@ function agencyRoutes(request, response) {
 
     });
 }
+
+/**
+ * Parse
+ *
+ * sample: http://localhost:8081/agency/sf-muni/route/N/stop/5205/predictions
+ * source sample: http://webservices.nextbus.com/service/publicXMLFeed?command=predictions&a=sf-muni&r=N&s=5205&useShortTitles=false
+ *
+ * @param request
+ * @param response
+ */
+function predictions(request, response) {
+    var endpoint = BASEPATH + '?' + querystring.stringify({command: 'predictions', a: request.params.agency, r: request.params.route, s:request.params.stop});;
+    doGet(HOST, endpoint, function(dom) {
+
+        console.log(dom);
+
+        var result = {
+            directions: []
+        }
+
+        // Run thru the DOM and produce a JSON structure
+        var list = dom.find('//predictions/direction');
+
+        for (var i = 0; i < list.length; ++i) {
+
+            console.log('direction:' + JSON.stringify(list[i]));
+
+            var title = list[i].attr('title').value()
+            var predictionList = list[i].find('prediction');
+
+            var predictions = [];
+
+            for(var j = 0; j < predictionList.length; ++j) {
+                predictions.push({minutes: predictionList[j].attr('minutes').value(), isDeparture: predictionList[j].attr('isDeparture').value()});
+            }
+
+            result.directions.push({"direction" : {title : title, predictions: predictions}});
+        }
+
+        result.directions.sort(function(a, b) {
+
+            if(a.minutes < b.minutes )
+                return -1;
+            else if (a.minutes > b.minutes)
+                return 1;
+            else
+                return 0;
+        });
+
+        response.send(JSON.stringify(result));
+
+    });
+}
+
 
 /**
  * JSON REST service: Return a schedule for a specific route and agency.
@@ -466,8 +598,6 @@ function nextAgencyRoutePrediction(request, response) {
         }
 
     });
-
-
 }
 
 function nextAgencyRouteSchedule(request, response) {
@@ -565,3 +695,6 @@ exports.routesNearCoordinate = routesNearCoordinate;
 exports.agenciesNearCoordinate = agenciesNearCoordinate;
 exports.regions = regions;
 exports.nextAgencyRoutePrediction = nextAgencyRoutePrediction;
+
+exports.predictions = predictions;
+

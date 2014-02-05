@@ -17,21 +17,7 @@
 
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8_nX9UAjPSNth57C0w1_v-5cZ5eL9Ex0&sensor=true"></script>
     <script type="text/javascript">
-        var map;
-        function initGoogleMaps(latitude, longitude) {
-            console.log('Loading map');
-            var latLng = new google.maps.LatLng(latitude, longitude);
-            var mapOptions = {
-                   center: latLng,
-                   zoom: 16
-            };
-            map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-            var marker = new google.maps.Marker({
-                 position: latLng,
-                 map: map,
-                 title: 'You are here!'
-            });
-         }
+
     </script>
 
     <!-- Main page -->
@@ -45,10 +31,16 @@
                 <div class="tmpl-district-select"></div>
                 <br/>
                 <div class="tmpl-routes-select"></div>
+                <br/>
+                <div class="tmpl-stops-select"></div>
+                <br/>
+                <div class="tmpl-stop-prediction"></div>
             </div>
+            <!--
             <div id="bus_time">
                 <div class="tmp-schedule-table"></div>
             </div>
+            -->
             <div id="map-canvas"/>
         </div>
     </div>
@@ -77,15 +69,73 @@
             Bus routes: <select data-style="btn-success" id="route-selector">
                 <option value="-">-- select route --</option>
                 <%
+                 var index = 0;
                  _.each(routes, function(route) {
-                    key = route.route.agencytag + ':' + route.route.routetag + ':' + route.route.latmin + ':' + route.route.lonmin;
+                    key = index + ':' + route.route.agencytag + ':' + route.route.routetag + ':' + route.route.latmin + ':' + route.route.lonmin;
                 %>
                    <option value="<%= key %>"><%= route.route.title %></option>
-                <% }); %>
+                <%
+                    index++;
+                    }); %>
             </select>
+            <br/>
         <% } else { %>
             No available bus routes in this area!
         <% } %>
+    </script>
+
+    <script type="text/template" id="stop-template">
+        <%
+            if (typeof stops != 'undefined') { %>
+            Stops: <select data-style="btn-success" id="stop-selector">
+                <option value="-">-- select stop --</option>
+                <%
+                 var index = 0;
+                 _.each(stops, function(stop) {
+                    key = stop.stop.tag;
+                %>
+                   <option value="<%= key %>"><%= stop.stop.title %></option>
+                <%
+                    index++;
+                    }); %>
+            </select>
+            <br/>
+        <% } else { %>
+            No available stops for this route!
+        <% } %>
+    </script>
+
+    <script type="text/template" id="prediction-template">
+        <div style="height:300px;overflow: auto;">
+            <table class="table table-striped table-bordered table-condensed">
+                <%
+                if(typeof predictions != 'undefined') {
+                    _.each(predictions.directions, function(direction) {
+                    %>
+                    <tr>
+                        <td colspan="2"><h5>Direction:<%= direction.direction.title %></h5></td>
+                    </tr>
+                    <tr><td>Minutes</td><td><h6>Arrives/Departs</h6></td></tr>
+                    <%
+                        _.each(direction.direction.predictions, function(prediction) {
+                            %>
+                    <tr>
+                        <td><%= prediction.minutes %></td>
+                        <% if (prediction.isDeparture) { %>
+                        <td>Departs</td>
+                        <% } else { %>
+                        <td>Arrives</td>
+                        <% } %>
+                    </tr>
+
+                            <%
+                        });
+                    });
+                }
+
+                %>
+            </table>
+        </div>
     </script>
 
     <script type="text/template" id="schedule-template">
