@@ -2,11 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="a6e09875-37ec-47f0-9d8e-b94a98082efb" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/web/js/spin.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/index.html" afterPath="$PROJECT_DIR$/web/index.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/web/js/nextbus.js" afterPath="$PROJECT_DIR$/web/js/nextbus.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nextbusapi.js" afterPath="$PROJECT_DIR$/nextbusapi.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/package.json" afterPath="$PROJECT_DIR$/package.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/server.js" afterPath="$PROJECT_DIR$/server.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="NextBus.iws" />
@@ -71,10 +71,10 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="nextbusapi.js" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="nextbusapi.js" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nextbusapi.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="487" column="51" selection-start="15644" selection-end="15644" vertical-scroll-proportion="0.0" vertical-offset="7125" max-vertical-offset="10590">
+            <state line="212" column="16" selection-start="6294" selection-end="6294" vertical-scroll-proportion="-1.0393258" vertical-offset="3735" max-vertical-offset="10605">
               <folding />
             </state>
           </provider>
@@ -89,25 +89,25 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="index.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="index.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="117" column="68" selection-start="4581" selection-end="4581" vertical-scroll-proportion="0.62426615" vertical-offset="1436" max-vertical-offset="2700">
+            <state line="131" column="46" selection-start="5189" selection-end="5189" vertical-scroll-proportion="-39.3" vertical-offset="0" max-vertical-offset="2745">
               <folding>
-                <marker date="1391642962000" expanded="true" signature="1998:2095" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="2015:2089" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="2243:2467" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="2676:3181" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="3489:3884" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="4084:4112" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="4113:5212" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="4192:5197" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="4388:4511" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="4756:5054" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="5355:5383" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="5384:6132" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="5459:6117" placeholder="..." />
-                <marker date="1391642962000" expanded="true" signature="5680:5871" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="2000:2097" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="2017:2091" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="2245:2469" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="2678:3183" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="3491:3886" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="4086:4114" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="4115:5410" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="4194:5395" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="4390:4513" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="4758:5056" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="5553:5581" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="5582:6330" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="5657:6315" placeholder="..." />
+                <marker date="1391717834000" expanded="true" signature="5878:6069" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -116,7 +116,28 @@
       <file leaf-file-name="nextbus.js" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/web/js/nextbus.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="276" column="83" selection-start="8557" selection-end="8557" vertical-scroll-proportion="0.0" vertical-offset="3835" max-vertical-offset="5475">
+            <state line="297" column="43" selection-start="9438" selection-end="9438" vertical-scroll-proportion="0.0" vertical-offset="4253" max-vertical-offset="5865">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="spin.js" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/web/js/spin.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="352" column="4" selection-start="10370" selection-end="10370" vertical-scroll-proportion="0.0" vertical-offset="4763" max-vertical-offset="5370">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="README.md" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider editor-type-id="MarkdownPreviewEditor">
+            <state />
+          </provider>
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="16" column="121" selection-start="787" selection-end="787" vertical-scroll-proportion="-8.888889" vertical-offset="0" max-vertical-offset="450">
               <folding />
             </state>
           </provider>
@@ -146,12 +167,13 @@
         <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/node_modules/should/Readme.md" />
         <option value="$PROJECT_DIR$/web/js/geoposition.js" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/spin.js" />
         <option value="$PROJECT_DIR$/web/css/nextbus.css" />
         <option value="$PROJECT_DIR$/server.js" />
-        <option value="$PROJECT_DIR$/web/js/nextbus.js" />
+        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/nextbusapi.js" />
+        <option value="$PROJECT_DIR$/web/js/spin.js" />
+        <option value="$PROJECT_DIR$/web/js/nextbus.js" />
         <option value="$PROJECT_DIR$/web/index.html" />
       </list>
     </option>
@@ -162,7 +184,7 @@
   <component name="ProjectFrameBounds">
     <option name="y" value="22" />
     <option name="width" value="1440" />
-    <option name="height" value="832" />
+    <option name="height" value="831" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -704,7 +726,7 @@
       <workItem from="1391458755138" duration="1527000" />
       <workItem from="1391460297674" duration="3611000" />
       <workItem from="1391463927281" duration="22264000" />
-      <workItem from="1391600506302" duration="23399000" />
+      <workItem from="1391600506302" duration="28360000" />
     </task>
     <task id="LOCAL-00001" summary="first commit&#10;">
       <created>1391445822965</created>
@@ -730,14 +752,22 @@
       <created>1391543772265</created>
       <updated>1391543772265</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="- Rewrote database seeder to use SAX parser instead of DOM&#10;- Added geo coordinates to bus stops&#10;- Draws bus stops on map&#10;- Removed static schdule table&#10;- Added dynamic route information per bus top&#10;">
+      <created>1391643200818</created>
+      <updated>1391643200818</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Updated">
+      <created>1391643675714</created>
+      <updated>1391643675714</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="165981000" />
+    <option name="totallyTimeSpent" value="170942000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="22" width="1440" height="832" extended-state="6" />
+    <frame x="0" y="22" width="1440" height="831" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -753,19 +783,19 @@
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="IDEtalk" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.2450852" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.24540682" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="REST Client" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.17871222" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32939634" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -784,7 +814,9 @@
     <MESSAGE value="first commit&#10;" />
     <MESSAGE value="Added more text to readme, added home button" />
     <MESSAGE value="Separated CSS and controller logic into external files." />
-    <option name="LAST_COMMIT_MESSAGE" value="Separated CSS and controller logic into external files." />
+    <MESSAGE value="- Rewrote database seeder to use SAX parser instead of DOM&#10;- Added geo coordinates to bus stops&#10;- Draws bus stops on map&#10;- Removed static schdule table&#10;- Added dynamic route information per bus top&#10;" />
+    <MESSAGE value="Updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -794,13 +826,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/nextbusapi.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="15" selection-start="130" selection-end="130" vertical-scroll-proportion="0.0" vertical-offset="90" max-vertical-offset="1110">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/node_modules/xml2js/README.md">
       <provider selected="true" editor-type-id="text-editor">
         <state line="11" column="95" selection-start="366" selection-end="366" vertical-scroll-proportion="0.0" vertical-offset="165" max-vertical-offset="5205" />
@@ -1033,16 +1058,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider editor-type-id="MarkdownPreviewEditor">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="14" column="89" selection-start="542" selection-end="542" vertical-scroll-proportion="0.0" vertical-offset="210" max-vertical-offset="450">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/web/css/nextbus.css">
       <provider selected="true" editor-type-id="text-editor">
         <state line="31" column="2" selection-start="596" selection-end="596" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="555">
@@ -1102,6 +1117,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider editor-type-id="MarkdownPreviewEditor">
+        <state />
+      </provider>
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="16" column="121" selection-start="787" selection-end="787" vertical-scroll-proportion="-8.888889" vertical-offset="0" max-vertical-offset="450">
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/server.js">
       <provider selected="true" editor-type-id="text-editor">
         <state line="47" column="0" selection-start="1781" selection-end="1781" vertical-scroll-proportion="0.0" vertical-offset="292" max-vertical-offset="1605">
@@ -1109,39 +1134,46 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/web/js/nextbus.js">
+    <entry file="file://$PROJECT_DIR$/web/js/spin.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="276" column="83" selection-start="8557" selection-end="8557" vertical-scroll-proportion="0.0" vertical-offset="3835" max-vertical-offset="5475">
+        <state line="352" column="4" selection-start="10370" selection-end="10370" vertical-scroll-proportion="0.0" vertical-offset="4763" max-vertical-offset="5370">
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nextbusapi.js">
+    <entry file="file://$PROJECT_DIR$/web/js/nextbus.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="487" column="51" selection-start="15644" selection-end="15644" vertical-scroll-proportion="0.0" vertical-offset="7125" max-vertical-offset="10590">
+        <state line="297" column="43" selection-start="9438" selection-end="9438" vertical-scroll-proportion="0.0" vertical-offset="4253" max-vertical-offset="5865">
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/web/index.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="117" column="68" selection-start="4581" selection-end="4581" vertical-scroll-proportion="0.62426615" vertical-offset="1436" max-vertical-offset="2700">
+        <state line="131" column="46" selection-start="5189" selection-end="5189" vertical-scroll-proportion="-39.3" vertical-offset="0" max-vertical-offset="2745">
           <folding>
-            <marker date="1391642962000" expanded="true" signature="1998:2095" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="2015:2089" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="2243:2467" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="2676:3181" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="3489:3884" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="4084:4112" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="4113:5212" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="4192:5197" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="4388:4511" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="4756:5054" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="5355:5383" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="5384:6132" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="5459:6117" placeholder="..." />
-            <marker date="1391642962000" expanded="true" signature="5680:5871" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="2000:2097" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="2017:2091" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="2245:2469" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="2678:3183" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="3491:3886" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="4086:4114" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="4115:5410" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="4194:5395" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="4390:4513" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="4758:5056" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="5553:5581" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="5582:6330" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="5657:6315" placeholder="..." />
+            <marker date="1391717834000" expanded="true" signature="5878:6069" placeholder="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nextbusapi.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="212" column="16" selection-start="6294" selection-end="6294" vertical-scroll-proportion="-1.0393258" vertical-offset="3735" max-vertical-offset="10605">
+          <folding />
         </state>
       </provider>
     </entry>

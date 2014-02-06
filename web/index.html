@@ -12,17 +12,14 @@
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
     <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.0/backbone-min.js"></script>
     <script src="js/geoposition.js"></script>
+    <script src="js/spin.js"></script>
 </head>
 <body>
 
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC8_nX9UAjPSNth57C0w1_v-5cZ5eL9Ex0&sensor=true"></script>
-    <script type="text/javascript">
-
-    </script>
-
     <!-- Main page -->
 
-    <div class="container">
+    <div class="container" id="container">
         <h1>Next Bus</h1>
         <hr/>
         <div id="wrapper">
@@ -131,6 +128,12 @@
                             <%
                         });
                     });
+
+                    if(predictions.directions.length == 0) {
+                       %>
+                       <b>No predictions for this stop!</b>
+                       <%
+                    }
                 }
 
                 %>

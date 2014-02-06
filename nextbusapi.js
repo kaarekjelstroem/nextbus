@@ -59,8 +59,9 @@ function doGetSax(host, endpoint, funcs) {
 
     req.on('socket', function (socket) {
         socket.setTimeout(1000 * 60 * 2); // Two minute timeout
-        socket.setMaxListeners(500);
+        socket.setMaxListeners(200);
         socket.on('timeout', function() {
+            console.log("ERROR! Socket Timeout for request " + endpoint);
             req.abort();
         });
     });

@@ -7,6 +7,27 @@ var app = app || {};
 
 var gmap_busstopmarkers = [];
 
+var opts = {
+  lines: 13, // The number of lines to draw
+  length: 20, // The length of each line
+  width: 10, // The line thickness
+  radius: 30, // The radius of the inner circle
+  corners: 1, // Corner roundness (0..1)
+  rotate: 0, // The rotation offset
+  direction: 1, // 1: clockwise, -1: counterclockwise
+  color: '#000', // #rgb or #rrggbb or array of colors
+  speed: 1, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: 'auto', // Top position relative to parent in px
+  left: 'auto' // Left position relative to parent in px
+};
+var target = document.getElementById('container');
+var spinner = new Spinner(opts).spin(target);
+
 function initGoogleMaps(latitude, longitude) {
     console.log('Loading map');
     var latLng = new google.maps.LatLng(latitude, longitude);
@@ -105,7 +126,8 @@ app.RoutesModel = Backbone.Model.extend({
     },
     updateUrl: function(lat, lon) {
         console.log("Coords:" + lat + "," + lon);
-        this.url = '/routesnearlat/' + lat + '/lon/' + lon + '/precision/4';
+        this.url = '/routesnearlat/' + lat + '/lon/' + lon + '/precision/3';
+        console.log('RoutesModel.url = ' + this.url);
     },
     url: ''
 });
@@ -163,8 +185,7 @@ app.RoutesView = Backbone.View.extend({
         this.model.fetch();
     },
     render: function () {
-        console.log(JSON.stringify("app.routesView.render:" + this.model.attributes));
-
+        console.log('RoutesModel: ' + JSON.stringify(this.model.attributes));
         var template = _.template($('#route-template').html(), { routes: this.model.attributes });
         this.$el.html(template);
 
@@ -274,7 +295,7 @@ app.PredictionView = Backbone.View.extend({
         this.listenTo(this.model,'change', this.render);
     },
     render: function () {
-        console.log('PredictionView.render:' + JSON.stringify(this.model.attributes));
+        console.log('PredictionView.render');
         var template = _.template($('#prediction-template').html(),{ predictions: this.model.attributes });
         console.log('PredictionView.done-render');
         this.$el.html(template);
@@ -346,6 +367,9 @@ $(document).ready(function(){
             console.log("routeView.stopsView:" + routesView.stopsView);
 
             console.log("DONE!!");
+
+            spinner.stop();
+
         })
 
         Backbone.history.start();
@@ -358,3 +382,4 @@ function gmap_ClearAllMarkers() {
     }
     gmap_busstopmarkers = [];
 }
+
